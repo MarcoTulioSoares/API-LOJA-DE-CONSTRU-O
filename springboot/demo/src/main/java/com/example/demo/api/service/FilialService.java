@@ -70,12 +70,13 @@ public class FilialService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados da filial são obrigatórios");
         }
 
+        Integer dtoId = normalizarId(dto.getIdLancamento());
+
         if (entity.getIdLancamento() == null) {
-            if (dto.getIdLancamento() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Código da filial é obrigatório");
+            if (dtoId != null) {
+                entity.setIdLancamento(dtoId);
             }
-            entity.setIdLancamento(dto.getIdLancamento());
-        } else if (dto.getIdLancamento() != null && !entity.getIdLancamento().equals(dto.getIdLancamento())) {
+        } else if (dtoId != null && !entity.getIdLancamento().equals(dtoId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é permitido alterar o código da filial");
         }
 
@@ -84,6 +85,13 @@ public class FilialService {
         }
 
         entity.setNome(dto.getNome());
+    }
+
+    private Integer normalizarId(Integer id) {
+        if (id == null || id <= 0) {
+            return null;
+        }
+        return id;
     }
 
     private FilialResumoDTO mapearParaResumo(FilialEntity entity) {
