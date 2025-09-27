@@ -7,16 +7,16 @@ import java.util.List;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 @Entity
-@Table(name = "TB_FILIAL")
+@Table(name = "tb_filial")
 public class FilialEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CODIGO_FILIAL", nullable = false, updatable = false,
+    @Column(name = "codigo_filial", nullable = false, updatable = false,
             columnDefinition = "INT AUTO_INCREMENT")
     private Integer idLancamento;
 
-    @Column(name = "NOME_FILIAL", nullable = false, length = 150)
+    @Column(name = "nome_filial", nullable = false, length = 150)
     private String nome;
 
     @JsonManagedReference("filial-ferramentas")
