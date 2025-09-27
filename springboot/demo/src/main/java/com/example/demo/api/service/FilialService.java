@@ -9,8 +9,10 @@ import com.example.demo.api.model.FilialEntity;
 import com.example.demo.api.model.MaterialConstrucaoEntity;
 import com.example.demo.api.repository.FilialRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +36,54 @@ public class FilialService {
     public Optional<FilialDetalheDTO> buscarPorId(Integer id) {
         return filialRepository.findById(id)
                 .map(this::mapearParaDetalhe);
+    }
+
+    @Transactional
+    public FilialDetalheDTO criar(FilialResumoDTO dto) {
+        FilialEntity entity = new FilialEntity();
+        atualizarCampos(entity, dto);
+        FilialEntity salvo = filialRepository.save(entity);
+        return mapearParaDetalhe(salvo);
+    }
+
+    @Transactional
+    public Optional<FilialDetalheDTO> atualizar(Integer id, FilialResumoDTO dto) {
+        return filialRepository.findById(id)
+                .map(entity -> {
+                    atualizarCampos(entity, dto);
+                    FilialEntity salvo = filialRepository.save(entity);
+                    return mapearParaDetalhe(salvo);
+                });
+    }
+
+    @Transactional
+    public boolean deletar(Integer id) {
+        if (!filialRepository.existsById(id)) {
+            return false;
+        }
+        filialRepository.deleteById(id);
+        return true;
+    }
+
+    private void atualizarCampos(FilialEntity entity, FilialResumoDTO dto) {
+        if (dto == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados da filial são obrigatórios");
+        }
+
+        if (entity.getIdLancamento() == null) {
+            if (dto.getIdLancamento() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Código da filial é obrigatório");
+            }
+            entity.setIdLancamento(dto.getIdLancamento());
+        } else if (dto.getIdLancamento() != null && !entity.getIdLancamento().equals(dto.getIdLancamento())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é permitido alterar o código da filial");
+        }
+
+        if (dto.getNome() == null || dto.getNome().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nome da filial é obrigatório");
+        }
+
+        entity.setNome(dto.getNome());
     }
 
     private FilialResumoDTO mapearParaResumo(FilialEntity entity) {
