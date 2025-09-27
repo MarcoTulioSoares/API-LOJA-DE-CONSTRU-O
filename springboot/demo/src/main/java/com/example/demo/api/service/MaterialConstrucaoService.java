@@ -4,11 +4,13 @@ import com.example.demo.api.dto.FilialResumoDTO;
 import com.example.demo.api.dto.MaterialConstrucaoDTO;
 import com.example.demo.api.model.FilialEntity;
 import com.example.demo.api.model.MaterialConstrucaoEntity;
+import com.example.demo.api.repository.FilialRepository;
 import com.example.demo.api.repository.MaterialConstrucaoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class MaterialConstrucaoService {
 
     private final MaterialConstrucaoRepository materialConstrucaoRepository;
+    private final FilialRepository filialRepository;
 
     @Transactional(readOnly = true)
     public List<MaterialConstrucaoDTO> listarTodos() {
@@ -30,6 +33,55 @@ public class MaterialConstrucaoService {
     public Optional<MaterialConstrucaoDTO> buscarPorId(Integer id) {
         return materialConstrucaoRepository.findById(id)
                 .map(this::mapearParaDTO);
+    }
+
+    @Transactional
+    public MaterialConstrucaoDTO criar(MaterialConstrucaoDTO dto) {
+        MaterialConstrucaoEntity entity = new MaterialConstrucaoEntity();
+        atualizarCampos(entity, dto);
+        MaterialConstrucaoEntity salvo = materialConstrucaoRepository.save(entity);
+        return mapearParaDTO(salvo);
+    }
+
+    @Transactional
+    public Optional<MaterialConstrucaoDTO> atualizar(Integer id, MaterialConstrucaoDTO dto) {
+        return materialConstrucaoRepository.findById(id)
+                .map(entity -> {
+                    atualizarCampos(entity, dto);
+                    MaterialConstrucaoEntity salvo = materialConstrucaoRepository.save(entity);
+                    return mapearParaDTO(salvo);
+                });
+    }
+
+    @Transactional
+    public boolean deletar(Integer id) {
+        if (!materialConstrucaoRepository.existsById(id)) {
+            return false;
+        }
+        materialConstrucaoRepository.deleteById(id);
+        return true;
+    }
+
+    private void atualizarCampos(MaterialConstrucaoEntity entity, MaterialConstrucaoDTO dto) {
+        if (dto == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados do material são obrigatórios");
+        }
+
+        entity.setCodigoProduto(dto.getCodigoProduto());
+        entity.setValor(dto.getValor());
+        entity.setCor(dto.getCor());
+        entity.setNome(dto.getNome());
+        entity.setMateriaPrima(dto.getMateriaPrima());
+        entity.setFilial(obterFilial(dto.getFilial()));
+    }
+
+    private FilialEntity obterFilial(FilialResumoDTO filialResumoDTO) {
+        if (filialResumoDTO == null || filialResumoDTO.getIdLancamento() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Filial do material é obrigatória");
+        }
+
+        return filialRepository.findById(filialResumoDTO.getIdLancamento())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Filial não encontrada"));
     }
 
     private MaterialConstrucaoDTO mapearParaDTO(MaterialConstrucaoEntity entity) {
