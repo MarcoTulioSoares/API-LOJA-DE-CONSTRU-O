@@ -6,34 +6,34 @@ import lombok.*;
 
 @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
 @Entity
-@Table(name = "TB_FERRAMENTA")
+@Table(name = "tb_ferramenta")
 public class FerramentaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CODIGO_FERRAMENTA", nullable = false, updatable = false,
+    @Column(name = "codigo_ferramenta", nullable = false, updatable = false,
             columnDefinition = "INT AUTO_INCREMENT")
     private Integer codFerramenta;
 
-    @Column(name = "CODIGO_PRODUTO", length = 50, nullable = false)
+    @Column(name = "codigo_produto", length = 50, nullable = false)
     private String codigoProduto;
 
-    @Column(name = "VALOR", nullable = false)
+    @Column(name = "valor", nullable = false)
     private Double valor;
 
-    @Column(name = "MARCA", length = 100)
+    @Column(name = "marca", length = 100)
     private String marca;
 
-    @Column(name = "NOME", length = 150, nullable = false)
+    @Column(name = "nome", length = 150, nullable = false)
     private String nome;
 
-    @Column(name = "QTD_PACOTE")
+    @Column(name = "qtd_pacote")
     private Integer qtdPacote;
 
 
     @JsonBackReference("filial-ferramentas")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "CODIGO_FILIAL", nullable = false,
-            foreignKey = @ForeignKey(name = "FK_FERRAMENTA_FILIAL"))
+    @JoinColumn(name = "codigo_filial", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_ferramenta_filial"))
     private FilialEntity filial;
 }
