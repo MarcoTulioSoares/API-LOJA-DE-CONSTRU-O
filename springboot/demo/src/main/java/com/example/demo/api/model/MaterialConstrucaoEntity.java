@@ -11,7 +11,8 @@ public class MaterialConstrucaoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CODIGO_MATERIAL")
+    @Column(name = "CODIGO_MATERIAL", nullable = false, updatable = false,
+            columnDefinition = "INT AUTO_INCREMENT")
     private Integer codMaterial;
 
     @Column(name = "CODIGO_PRODUTO", length = 50, nullable = false)

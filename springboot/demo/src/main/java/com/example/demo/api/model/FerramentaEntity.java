@@ -11,7 +11,8 @@ public class FerramentaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CODIGO_FERRAMENTA")
+    @Column(name = "CODIGO_FERRAMENTA", nullable = false, updatable = false,
+            columnDefinition = "INT AUTO_INCREMENT")
     private Integer codFerramenta;
 
     @Column(name = "CODIGO_PRODUTO", length = 50, nullable = false)

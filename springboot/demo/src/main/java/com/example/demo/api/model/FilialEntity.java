@@ -11,7 +11,9 @@ import java.util.List;
 public class FilialEntity {
 
     @Id
-    @Column(name = "CODIGO_FILIAL")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CODIGO_FILIAL", nullable = false, updatable = false,
+            columnDefinition = "INT AUTO_INCREMENT")
     private Integer idLancamento;
 
     @Column(name = "NOME_FILIAL", nullable = false, length = 150)
