@@ -1,26 +1,36 @@
 # syntax=docker/dockerfile:1
 
-# Stage 1: build the application
+# ---------- Stage 1: Build ----------
 FROM maven:3.9.6-eclipse-temurin-17 AS builder
 WORKDIR /app
 
-# Copy Maven descriptor and resolve dependencies
+# Copia o pom e baixa deps (cache melhor)
 COPY pom.xml ./
-RUN mvn -B dependency:go-offline
+RUN mvn -q -B -DskipTests dependency:go-offline
 
-# Copy source code and build the JAR
+# Copia o código e compila
 COPY src ./src
-RUN mvn -B clean package -DskipTests
+RUN mvn -q -B -DskipTests clean package
 
-# Stage 2: create lightweight runtime image
+# ---------- Stage 2: Runtime ----------
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 
-# Expose the default Spring Boot port
-EXPOSE 8080
+# Expõe a porta padrão local (8089). Render/Heroku vão injetar PORT e ignoram isso.
+EXPOSE 8089
 
-# Copy the built jar from the builder stage
+# (Opcional) timezone consistente
+ENV TZ=UTC
+
+# (Opcional) tunar a JVM em containers
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75 -XX:InitialRAMPercentage=50 -Dfile.encoding=UTF-8"
+
+# Copia o jar do stage de build
 COPY --from=builder /app/target/*.jar app.jar
 
-# Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Cria usuário não-root (melhor prática)
+RUN useradd -r -u 1001 appuser && chown appuser:appuser /app
+USER appuser
+
+# Usa JAVA_OPTS e respeita PORT (Heroku/Render), senão cai em 8089
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dserver.port=${PORT:-8089} -jar app.jar"]
