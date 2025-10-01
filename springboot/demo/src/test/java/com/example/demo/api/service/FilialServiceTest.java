@@ -38,7 +38,7 @@ class FilialServiceTest {
     @Disabled("Skipped by request")
     void listarTodasDeveRetornarResumoDasFiliais() {
         FilialEntity entity = FilialEntity.builder()
-                .idLancamento(3)
+                .idFilial(3)
                 .nome("Loja Centro")
                 .build();
 
@@ -49,7 +49,7 @@ class FilialServiceTest {
         assertThat(resultado)
                 .singleElement()
                 .satisfies(resumo -> {
-                    assertThat(resumo.getIdLancamento()).isEqualTo(3);
+                    assertThat(resumo.getIdFilial()).isEqualTo(3);
                     assertThat(resumo.getNome()).isEqualTo("Loja Centro");
                 });
     }
@@ -58,7 +58,7 @@ class FilialServiceTest {
     @Disabled("Skipped by request")
     void buscarPorIdDeveRetornarDetalhesComAssociacoes() {
         FilialEntity filial = FilialEntity.builder()
-                .idLancamento(5)
+                .idFilial(5)
                 .nome("Loja Norte")
                 .build();
 

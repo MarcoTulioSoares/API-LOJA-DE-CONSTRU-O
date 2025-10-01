@@ -14,7 +14,7 @@ public class FilialEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "codigo_filial", nullable = false, updatable = false,
             columnDefinition = "INT AUTO_INCREMENT")
-    private Integer idLancamento;
+    private Integer idFilial;
 
     @Column(name = "nome_filial", nullable = false, length = 150)
     private String nome;

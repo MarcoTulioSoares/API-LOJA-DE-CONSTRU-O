@@ -42,7 +42,7 @@ class FerramentaServiceTest {
     @Disabled("Skipped by request")
     void listarTodosDeveRetornarFerramentasMapeadas() {
         FilialEntity filial = FilialEntity.builder()
-                .idLancamento(2)
+                .idFilial(2)
                 .nome("Unidade Sul")
                 .build();
 
@@ -73,7 +73,7 @@ class FerramentaServiceTest {
     @Disabled("Skipped by request")
     void criarDeveSalvarFerramentaComFilialValida() {
         FilialResumoDTO filialResumo = FilialResumoDTO.builder()
-                .idLancamento(9)
+                .idFilial(9)
                 .nome("Unidade Leste")
                 .build();
 
@@ -87,7 +87,7 @@ class FerramentaServiceTest {
                 .build();
 
         FilialEntity filialEntity = FilialEntity.builder()
-                .idLancamento(9)
+                .idFilial(9)
                 .nome("Unidade Leste")
                 .build();
 
@@ -106,6 +106,6 @@ class FerramentaServiceTest {
         FerramentaEntity salvo = captor.getValue();
         assertThat(salvo.getFilial()).isEqualTo(filialEntity);
         assertThat(resultado.getCodFerramenta()).isEqualTo(41);
-        assertThat(resultado.getFilial().getIdLancamento()).isEqualTo(9);
+        assertThat(resultado.getFilial().getIdFilial()).isEqualTo(9);
     }
 }

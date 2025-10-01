@@ -70,13 +70,13 @@ public class FilialService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados da filial são obrigatórios");
         }
 
-        Integer dtoId = normalizarId(dto.getIdLancamento());
+        Integer dtoId = normalizarId(dto.getIdFilial());
 
-        if (entity.getIdLancamento() == null) {
+        if (entity.getIdFilial() == null) {
             if (dtoId != null) {
-                entity.setIdLancamento(dtoId);
+                entity.setIdFilial(dtoId);
             }
-        } else if (dtoId != null && !entity.getIdLancamento().equals(dtoId)) {
+        } else if (dtoId != null && !entity.getIdFilial().equals(dtoId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não é permitido alterar o código da filial");
         }
 
@@ -100,7 +100,7 @@ public class FilialService {
         }
 
         return FilialResumoDTO.builder()
-                .idLancamento(entity.getIdLancamento())
+                .idFilial(entity.getIdFilial())
                 .nome(entity.getNome())
                 .build();
     }
@@ -123,7 +123,7 @@ public class FilialService {
                 .toList();
 
         return FilialDetalheDTO.builder()
-                .idLancamento(entity.getIdLancamento())
+                .idFilial(entity.getIdFilial())
                 .nome(entity.getNome())
                 .ferramentas(ferramentas)
                 .materiais(materiais)

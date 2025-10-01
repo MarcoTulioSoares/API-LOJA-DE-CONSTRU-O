@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class FilialResumoDTO {
-    private Integer idLancamento;
+    private Integer idFilial;
     private String nome;
 }

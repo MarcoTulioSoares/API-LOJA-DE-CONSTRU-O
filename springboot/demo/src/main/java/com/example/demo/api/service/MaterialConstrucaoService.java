@@ -76,11 +76,11 @@ public class MaterialConstrucaoService {
     }
 
     private FilialEntity obterFilial(FilialResumoDTO filialResumoDTO) {
-        if (filialResumoDTO == null || filialResumoDTO.getIdLancamento() == null) {
+        if (filialResumoDTO == null || filialResumoDTO.getIdFilial() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Filial do material é obrigatória");
         }
 
-        return filialRepository.findById(filialResumoDTO.getIdLancamento())
+        return filialRepository.findById(filialResumoDTO.getIdFilial())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Filial não encontrada"));
     }
 
@@ -106,7 +106,7 @@ public class MaterialConstrucaoService {
         }
 
         return FilialResumoDTO.builder()
-                .idLancamento(filial.getIdLancamento())
+                .idFilial(filial.getIdFilial())
                 .nome(filial.getNome())
                 .build();
     }

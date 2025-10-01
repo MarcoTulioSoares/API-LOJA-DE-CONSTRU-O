@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class FilialDetalheDTO {
-    private Integer idLancamento;
+    private Integer idFilial;
     private String nome;
 
     private List<FerramentaDTO> ferramentas;

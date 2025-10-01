@@ -42,7 +42,7 @@ class MaterialConstrucaoServiceTest {
     @Disabled("Skipped by request")
     void listarTodosDeveMapearEntidadesParaDTOs() {
         FilialEntity filial = FilialEntity.builder()
-                .idLancamento(1)
+                .idFilial(1)
                 .nome("Matriz")
                 .build();
 
@@ -74,7 +74,7 @@ class MaterialConstrucaoServiceTest {
     @Disabled("Skipped by request")
     void criarDevePersistirMaterialComFilialExistente() {
         FilialResumoDTO filialResumo = FilialResumoDTO.builder()
-                .idLancamento(7)
+                .idFilial(7)
                 .nome("Centro")
                 .build();
 
@@ -88,7 +88,7 @@ class MaterialConstrucaoServiceTest {
                 .build();
 
         FilialEntity filialEntity = FilialEntity.builder()
-                .idLancamento(7)
+                .idFilial(7)
                 .nome("Centro")
                 .build();
 
@@ -107,6 +107,6 @@ class MaterialConstrucaoServiceTest {
         MaterialConstrucaoEntity salvo = captor.getValue();
         assertThat(salvo.getFilial()).isEqualTo(filialEntity);
         assertThat(resultado.getCodMaterial()).isEqualTo(22);
-        assertThat(resultado.getFilial().getIdLancamento()).isEqualTo(7);
+        assertThat(resultado.getFilial().getIdFilial()).isEqualTo(7);
     }
 }
